@@ -63,13 +63,12 @@ interface PokemonIndividualInfo {
 
 const PokeDexMainPage = () => {
   // Variable defintions
-  const [pokemonData, setPokemonData] = useState<PokemonLimitedInfo[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const pokemonLimit = 50;
   const baseImgURL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/';
   const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
+  const [pokemonData, setPokemonData] = useState<PokemonLimitedInfo[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPokemonObj, setCurrentPokemonObj] = useState<PokemonIndividualInfo>();
-  // const [initialPageLoad, setInitialPageLoad] = useState<boolean>(true);
   const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>(`${baseAPIURL}?limit=${pokemonLimit}`);
   const [nextSetOfPokemonUrl, setNextSetOfPokemonUrl] = useState<string>("");
   const [prevSetOfPokemonUrl, setPrevSetOfPokemonUrl] = useState<string>("");
@@ -93,6 +92,16 @@ const PokeDexMainPage = () => {
   };
   const screenText: CSSProperties = {
     color: 'white',
+  };
+  const selectedPokemonRoot: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '98%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  };
+  const selectedPokemonImg: CSSProperties = {
+    width: '43%',
   };
 
   // Function definitions
@@ -125,7 +134,7 @@ const PokeDexMainPage = () => {
       if (addToSearchHistory) {
         setSearchHistory((prevHistory) => [...prevHistory, somePhrase]);
       }
-      const urlForRequest = `${baseAPIURL}${somePhrase}`;
+      const urlForRequest = `${baseAPIURL}${somePhrase.toLowerCase()}`;
       try {
         // Fetch data from the current URL
         const response = await fetch(urlForRequest);
@@ -268,16 +277,26 @@ const PokeDexMainPage = () => {
       )}
       {(pokemonData && pokemonData.length > 0 && !isLoading) && (
         <>
+          {(currentPokemonObj && currentPokemonObj.id) && (
+            <div style={selectedPokemonRoot}>
+              <img src={`${baseImgURL}${currentPokemonObj.id}.png`} alt="" style={selectedPokemonImg} />
+              <p style={screenText}>
+                {currentPokemonObj.abilities.map((ability) => {
+                    return (
+                      <div>
+                        {ability.ability.name}
+                      </div>
+                    )
+                  })
+                }
+              </p>
+            </div>
+          )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
           <PokemonPagination 
             getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
             getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
           />
-          {(currentPokemonObj && currentPokemonObj.id) && (
-            <p style={screenText}>
-              {currentPokemonObj.abilities[0].ability.name}
-            </p>
-          )}
           <div style={pokemonDisplayRoot}>
             {displayCurrentPokemon}
           </div>
