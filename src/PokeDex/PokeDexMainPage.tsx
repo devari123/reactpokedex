@@ -300,6 +300,10 @@ const PokeDexMainPage = () => {
           <div style={pokemonDisplayRoot}>
             {displayCurrentPokemon}
           </div>
+          <PokemonPagination 
+            getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
+            getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
+          />
         </>
       )}
     </div>
