@@ -1,20 +1,79 @@
 import React, { useState, useEffect, useMemo, CSSProperties } from 'react';
 import PokemonPagination from './PokemonPagination';
+import PokeDexSearchBar from './PokeDexSearchBar';
+
+// Interface defintions
+// This interface defines an object that holds a variable, name, for each Pokemon in a given set of Pokemon
+interface PokemonLimitedInfo {
+  name: string;
+}
+
+// These interfaces define the a Pokemon's abilities, stats, moves, sprites, and types
+interface PokemonAbilities {
+  ability: {
+    name: string;
+    url: string;
+  };
+  is_hidden: boolean;
+  slot: number;
+}
+
+interface PokemonStats {
+  base_stat: number;
+  effort: number;
+  stat: {
+    name: string;
+    url: string;
+  };
+}
+
+interface PokemonMoves {
+  move: {
+    name: string;
+  };
+}
+
+interface PokemonSprites {
+  other: {
+    home: {
+      front_default: string | null;
+    };
+  }
+}
+
+interface PokemonTypes {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
+
+interface PokemonIndividualInfo {
+  id: number;
+  name: string;
+  height: number;
+  weight: number;
+  abilities: PokemonAbilities[];
+  moves: PokemonMoves[];
+  sprites: PokemonSprites;
+  stats: PokemonStats[];
+  types: PokemonTypes[];
+}
 
 const PokeDexMainPage = () => {
-  // Interface defintions
-  // This interface defines an object that holds a variable, name, for each Pokemon in a given set of Pokemon
-  interface PokemonLimitedInfo {
-    name: string;
-  }
-
-  // State variable defintions
+  // Variable defintions
   const [pokemonData, setPokemonData] = useState<PokemonLimitedInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>("https://pokeapi.co/api/v2/pokemon/?limit=50");
+  const pokemonLimit = 50;
+  const baseImgURL = '';
+  const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
+  const [currentPokemonObj, setCurrentPokemonObj] = useState<PokemonIndividualInfo>();
+  const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>(`${baseAPIURL}?limit=${pokemonLimit}`);
   const [nextSetOfPokemonUrl, setNextSetOfPokemonUrl] = useState<string>("");
   const [prevSetOfPokemonUrl, setPrevSetOfPokemonUrl] = useState<string>("");
   const [indexOfFirstPokemonInSet, setIndexOfFirstPokemonInSet] = useState<number>(1);
+  const [searchPhrase, setSearchPhrase] = useState<string>("");
 
   // Styling definitions
   const componentRoot: CSSProperties = {
@@ -33,21 +92,51 @@ const PokeDexMainPage = () => {
 
   // This function fetches the next set of pokemon from the pokemon api
   const getNextSetOfPokemon = () => {
+    /* 
+      This will be the index of the first pokemon in the current set of pokemon being viewed.
+      This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects, instead of just in relation to
+      the current set of pokemon
+    */
     setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50);
     setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl)
   }
 
   // This function fecthes the previous set of pokemon from the pokemon api
   const getPreviousSetOfPokemon = () => {
-    if (indexOfFirstPokemonInSet !== 1) {
-      setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50)
-    }
+    /* 
+      This will be the index of the first pokemon in the current set of pokemon being viewed.
+      This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just in relation to
+       the current set of pokemon
+    */
+    setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50)
     setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl)
+  }
+
+  // this is a function to fetch the list of pokemon from the pokemon api
+  const fetchOnePokemon = async () => {
+    const urlForRequest = `${baseAPIURL}${searchPhrase}`;
+    try {
+      // Fetch data from the current URL
+      const response = await fetch(urlForRequest)
+
+      // Parse the response as json
+      const json = await response.json()
+
+      setCurrentPokemonObj(json);
+    } catch (error) {
+      // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
+      console.log("error pulling data for one pokemon", error)
+    }
+  };
+
+  const findThisPokemon = () => {
+    fetchOnePokemon()
   }
 
   /*
     Although looping over 50 pokemon objects is not necessarily an expensive function,
-    this memoizes a function that could be potentially expensive depending on how the 'limit' query is defined in 'currentSetOfPokemonUrl'
+    this memoizes a function that could be potentially expensive depending on how the 'limit' query is defined in 'currentSetOfPokemonUrl',
+    as it iterates over the current set of Pokemon, which can be anywhere from 1 to 1302 pokemon, and displays each Pokemon's information
   */
   const displayCurrentPokemon = useMemo(() => {
 
@@ -149,15 +238,21 @@ const PokeDexMainPage = () => {
     <div style={componentRoot}>
       {isLoading && (
           <p style={screenText}>
-            Catching Pokemon ...
+            Gotta Catch Em All ...
           </p>
       )}
       {(pokemonData && pokemonData.length > 0 && !isLoading) && (
         <>
+          <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
           <PokemonPagination 
             getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
             getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
           />
+          {(currentPokemonObj && currentPokemonObj.id) && (
+            <p style={screenText}>
+              {currentPokemonObj.abilities[0].ability.name}
+            </p>
+          )}
           <div style={pokemonDisplayRoot}>
             {displayCurrentPokemon}
           </div>
