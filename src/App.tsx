@@ -1,25 +1,25 @@
 import React from 'react';
+import {
+  BrowserRouter, Route, Routes,
+} from 'react-router-dom';
 import logo from './logo.svg';
-import './App.css';
 
 function App() {
+  // use lazy.import for efficient importation of the two PokeDex Components
+  const PokeDexMainScreen = React.lazy(() => import('./PokeDex/PokeDexMainPage'));
+  
+  const pokedexRoutes = (
+    <Routes>
+      <Route path="/" element={<PokeDexMainScreen />} />
+    </Routes>
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Suspense fallback={<center><img src={logo} alt="logo" /></center>}>
+      <BrowserRouter>
+        {pokedexRoutes}
+      </BrowserRouter>
+    </React.Suspense>
   );
 }
 
