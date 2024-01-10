@@ -189,7 +189,12 @@ const PokeDexMainPage = () => {
               {pokemon.name}
             </p>
             {pokemonIndex && (
-              <button onClick={() => findThisPokemon(String(pokemonIndex))}>
+              <button onClick={() => {
+                // this if check makes sure that the findThisPokemon function is not being run unnecessarily
+                if ((currentPokemonObj && currentPokemonObj.id === pokemonIndex) || !currentPokemonObj) {
+                  findThisPokemon(String(pokemonIndex))
+                }
+              }}>
                 VIEW POKEMON
               </button>
             )}
