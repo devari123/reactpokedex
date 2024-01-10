@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, CSSProperties } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, CSSProperties } from 'react';
 import PokemonPagination from './PokemonPagination';
 import PokeDexSearchBar from './PokeDexSearchBar';
 
@@ -112,26 +112,25 @@ const PokeDexMainPage = () => {
     setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl);
   }
 
-  // this is a function to fetch the list of pokemon from the pokemon api
-  const fetchOnePokemon = async (phrase: string) => {
-    const urlForRequest = `${baseAPIURL}${phrase}`;
-    try {
-      // Fetch data from the current URL
-      const response = await fetch(urlForRequest);
+  // This function uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
+  const findThisPokemon = useCallback(
+    async (somePhrase: string) => {
+      const urlForRequest = `${baseAPIURL}${somePhrase}`;
+      try {
+        // Fetch data from the current URL
+        const response = await fetch(urlForRequest);
 
-      // Parse the response as json
-      const json = await response.json();
+        // Parse the response as json
+        const json = await response.json();
 
-      setCurrentPokemonObj(json);
-    } catch (error) {
-      // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-      console.log("error pulling data for one pokemon", error);
-    }
-  };
-
-  const findThisPokemon = (somePhrase: string) => {
-    fetchOnePokemon(somePhrase);
-  }
+        setCurrentPokemonObj(json);
+      } catch (error) {
+        // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
+        console.log("error pulling data for one pokemon", error);
+      }
+    },
+    []
+  );
 
   /*
     Although looping over 50 pokemon objects is not necessarily an expensive function,
@@ -191,7 +190,7 @@ const PokeDexMainPage = () => {
             {pokemonIndex && (
               <button onClick={() => {
                 // this if check makes sure that the findThisPokemon function is not being run unnecessarily
-                if ((currentPokemonObj && currentPokemonObj.id === pokemonIndex) || !currentPokemonObj) {
+                if ((currentPokemonObj && currentPokemonObj.id !== pokemonIndex) || !currentPokemonObj) {
                   findThisPokemon(String(pokemonIndex))
                 }
               }}>
