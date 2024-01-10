@@ -66,7 +66,7 @@ const PokeDexMainPage = () => {
   const [pokemonData, setPokemonData] = useState<PokemonLimitedInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const pokemonLimit = 50;
-  const baseImgURL = '';
+  const baseImgURL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/';
   const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
   const [currentPokemonObj, setCurrentPokemonObj] = useState<PokemonIndividualInfo>();
   const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>(`${baseAPIURL}?limit=${pokemonLimit}`);
@@ -115,21 +115,23 @@ const PokeDexMainPage = () => {
   // This function uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
   const findThisPokemon = useCallback(
     async (somePhrase: string) => {
-      const urlForRequest = `${baseAPIURL}${somePhrase}`;
-      try {
-        // Fetch data from the current URL
-        const response = await fetch(urlForRequest);
-
-        // Parse the response as json
-        const json = await response.json();
-
-        setCurrentPokemonObj(json);
-      } catch (error) {
-        // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-        console.log("error pulling data for one pokemon", error);
+      if ((currentPokemonObj && String(currentPokemonObj.id) !== somePhrase)) {
+        const urlForRequest = `${baseAPIURL}${somePhrase}`;
+        try {
+          // Fetch data from the current URL
+          const response = await fetch(urlForRequest);
+  
+          // Parse the response as json
+          const json = await response.json();
+  
+          setCurrentPokemonObj(json);
+        } catch (error) {
+          // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
+          console.log("error pulling data for one pokemon", error);
+        }
       }
     },
-    []
+    [currentPokemonObj]
   );
 
   /*
@@ -173,7 +175,7 @@ const PokeDexMainPage = () => {
         list.push(
           <div style={pokemonDisplayCard} key={`pokemon${pokemonIndex}`}>
             <img
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonIndex}.png`}
+              src={`${baseImgURL}${pokemonIndex}.png`}
               alt="imageofpokemon"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 
@@ -189,10 +191,7 @@ const PokeDexMainPage = () => {
             </p>
             {pokemonIndex && (
               <button onClick={() => {
-                // this if check makes sure that the findThisPokemon function is not being run unnecessarily
-                if ((currentPokemonObj && currentPokemonObj.id !== pokemonIndex) || !currentPokemonObj) {
-                  findThisPokemon(String(pokemonIndex))
-                }
+                findThisPokemon(String(pokemonIndex))
               }}>
                 VIEW POKEMON
               </button>
@@ -205,7 +204,7 @@ const PokeDexMainPage = () => {
     };
 
     return constructHTMLPokemonDisplay(pokemonData);
-  }, [pokemonData, indexOfFirstPokemonInSet])
+  }, [pokemonData, indexOfFirstPokemonInSet, findThisPokemon])
 
   useEffect(() => {
     let ignore = false;
