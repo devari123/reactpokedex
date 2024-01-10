@@ -69,21 +69,27 @@ const PokeDexMainPage = () => {
   const baseImgURL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/';
   const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
   const [currentPokemonObj, setCurrentPokemonObj] = useState<PokemonIndividualInfo>();
+  // const [initialPageLoad, setInitialPageLoad] = useState<boolean>(true);
   const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>(`${baseAPIURL}?limit=${pokemonLimit}`);
   const [nextSetOfPokemonUrl, setNextSetOfPokemonUrl] = useState<string>("");
   const [prevSetOfPokemonUrl, setPrevSetOfPokemonUrl] = useState<string>("");
   const [indexOfFirstPokemonInSet, setIndexOfFirstPokemonInSet] = useState<number>(1);
   const [searchPhrase, setSearchPhrase] = useState<string>("");
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [searchHistory, setSearchHistory] = useState<Array<string>>(JSON.parse(localStorage.getItem('searchHistory') || '[]'));
 
   // Styling definitions
   const componentRoot: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: 'black',
+    width: '100%',
     minHeight: '100vh',
   };
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
+    width: '96%',
+    alignSelf: 'center',
   };
   const screenText: CSSProperties = {
     color: 'white',
@@ -149,9 +155,12 @@ const PokeDexMainPage = () => {
       const pokemonDisplayCard: CSSProperties = {
         display: 'flex',
         flexDirection: 'column',
+        width: '14%',
+        margin: '1%',
       };
       const pokemonDisplayName: CSSProperties = {
         color: 'white',
+        textAlign: 'center',
       };
 
       // defining an array that will hold jsx elements
@@ -215,17 +224,17 @@ const PokeDexMainPage = () => {
     const fetchPokemon = async () => {
       try {
         // Fetch data from the current URL
-        const response = await fetch(currentSetOfPokemonUrl)
+        const response = await fetch(currentSetOfPokemonUrl);
 
         // Parse the response as json
-        const json = await response.json()
+        const json = await response.json();
 
         // If the component is still mounted, update the state variables
         if (!ignore) {
-          setNextSetOfPokemonUrl(json.next)
-          setPrevSetOfPokemonUrl(json.previous)
-          setPokemonData(json.results)
-          setIsLoading(false)
+          setNextSetOfPokemonUrl(json.next);
+          setPrevSetOfPokemonUrl(json.previous);
+          setPokemonData(json.results);
+          setIsLoading(false);
         }
       } catch (error) {
         // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
@@ -233,14 +242,22 @@ const PokeDexMainPage = () => {
       }
     };
 
-    // Call the fetchPokemon function when the component mounts or when currentSetOfPokemonUrl changes
-    fetchPokemon();
+    if ((currentSetOfPokemonUrl === prevSetOfPokemonUrl) || (currentSetOfPokemonUrl === nextSetOfPokemonUrl) || (!pokemonData || pokemonData.length <= 0)) {
+      // Call the fetchPokemon function when the component mounts or when currentSetOfPokemonUrl changes
+      fetchPokemon();
+    }
+
+    const localStorageSearchHistory = localStorage.getItem('searchHistory');
+    if (localStorageSearchHistory && localStorageSearchHistory.length && searchHistory && localStorageSearchHistory.length !== searchHistory.length) {
+      // Save search history to localStorage
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    }
 
     // This is a Cleanup function that sets the ignore variable to true when the component is unmounted
     return () => {
       ignore = true;
     }
-  }, [currentSetOfPokemonUrl]);
+  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData]);
 
   return (
     <div style={componentRoot}>
