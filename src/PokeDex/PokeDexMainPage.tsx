@@ -74,6 +74,7 @@ const PokeDexMainPage = () => {
   const [prevSetOfPokemonUrl, setPrevSetOfPokemonUrl] = useState<string>("");
   const [indexOfFirstPokemonInSet, setIndexOfFirstPokemonInSet] = useState<number>(1);
   const [searchPhrase, setSearchPhrase] = useState<string>("");
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
   // Styling definitions
   const componentRoot: CSSProperties = {
@@ -114,24 +115,25 @@ const PokeDexMainPage = () => {
 
   // This function uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
   const findThisPokemon = useCallback(
-    async (somePhrase: string) => {
-      if ((currentPokemonObj && String(currentPokemonObj.id) !== somePhrase)) {
-        const urlForRequest = `${baseAPIURL}${somePhrase}`;
-        try {
-          // Fetch data from the current URL
-          const response = await fetch(urlForRequest);
-  
-          // Parse the response as json
-          const json = await response.json();
-  
-          setCurrentPokemonObj(json);
-        } catch (error) {
-          // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-          console.log("error pulling data for one pokemon", error);
-        }
+    async (somePhrase: string, addToSearchHistory: boolean) => {
+      if (addToSearchHistory) {
+        setSearchHistory((prevHistory) => [...prevHistory, somePhrase]);
+      }
+      const urlForRequest = `${baseAPIURL}${somePhrase}`;
+      try {
+        // Fetch data from the current URL
+        const response = await fetch(urlForRequest);
+
+        // Parse the response as json
+        const json = await response.json();
+
+        setCurrentPokemonObj(json);
+      } catch (error) {
+        // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
+        console.log("error pulling data for one pokemon", error);
       }
     },
-    [currentPokemonObj]
+    []
   );
 
   /*
@@ -191,7 +193,7 @@ const PokeDexMainPage = () => {
             </p>
             {pokemonIndex && (
               <button onClick={() => {
-                findThisPokemon(String(pokemonIndex))
+                findThisPokemon(String(pokemonIndex), false)
               }}>
                 VIEW POKEMON
               </button>
