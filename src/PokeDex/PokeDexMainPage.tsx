@@ -79,14 +79,14 @@ const PokeDexMainPage = () => {
   const componentRoot: CSSProperties = {
     backgroundColor: 'black',
     minHeight: '100vh',
-  }
+  };
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
-  }
+  };
   const screenText: CSSProperties = {
     color: 'white',
-  }
+  };
 
   // Function definitions
 
@@ -98,7 +98,7 @@ const PokeDexMainPage = () => {
       the current set of pokemon
     */
     setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50);
-    setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl)
+    setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl);
   }
 
   // This function fecthes the previous set of pokemon from the pokemon api
@@ -108,29 +108,29 @@ const PokeDexMainPage = () => {
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just in relation to
        the current set of pokemon
     */
-    setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50)
-    setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl)
+    setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50);
+    setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl);
   }
 
   // this is a function to fetch the list of pokemon from the pokemon api
-  const fetchOnePokemon = async () => {
+  const fetchOnePokemon = async (phrase: string) => {
     const urlForRequest = `${baseAPIURL}${searchPhrase}`;
     try {
       // Fetch data from the current URL
-      const response = await fetch(urlForRequest)
+      const response = await fetch(urlForRequest);
 
       // Parse the response as json
-      const json = await response.json()
+      const json = await response.json();
 
       setCurrentPokemonObj(json);
     } catch (error) {
       // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-      console.log("error pulling data for one pokemon", error)
+      console.log("error pulling data for one pokemon", error);
     }
   };
 
-  const findThisPokemon = () => {
-    fetchOnePokemon()
+  const findThisPokemon = (somePhrase: string) => {
+    fetchOnePokemon(somePhrase);
   }
 
   /*
@@ -146,10 +146,10 @@ const PokeDexMainPage = () => {
       const pokemonDisplayCard: CSSProperties = {
         display: 'flex',
         flexDirection: 'column',
-      }
+      };
       const pokemonDisplayName: CSSProperties = {
         color: 'white',
-      }
+      };
       const list: JSX.Element[] = [];
       
       /* 

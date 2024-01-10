@@ -7,14 +7,14 @@ interface PokeDexSearchBarProps {
   // A function to set the searchWord state variable to anything entered in the textbox
   setSearchPhrase: (event: string) => void | null;
   // A function that searches for a singular pokemon based on the user's input
-  findThisPokemon: null | (() => void);
+  findThisPokemon: null | ((somePhrase: string) => void);
 }
 
 const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSearchPhrase, findThisPokemon }) => {
   // This function carries out the findThisPokemon function if the user presses Enter
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && findThisPokemon && searchPhrase) {
-      findThisPokemon();
+      findThisPokemon(searchPhrase);
     }
   }
 
@@ -30,7 +30,7 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
       />}
       {(findThisPokemon && searchPhrase) &&
         <button
-          onClick={findThisPokemon}
+          onClick={() => findThisPokemon(searchPhrase)}
         >
           Search
         </button>
