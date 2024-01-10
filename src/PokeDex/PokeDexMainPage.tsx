@@ -114,7 +114,7 @@ const PokeDexMainPage = () => {
 
   // this is a function to fetch the list of pokemon from the pokemon api
   const fetchOnePokemon = async (phrase: string) => {
-    const urlForRequest = `${baseAPIURL}${searchPhrase}`;
+    const urlForRequest = `${baseAPIURL}${phrase}`;
     try {
       // Fetch data from the current URL
       const response = await fetch(urlForRequest);
@@ -150,14 +150,10 @@ const PokeDexMainPage = () => {
       const pokemonDisplayName: CSSProperties = {
         color: 'white',
       };
+
+      // defining an array that will hold jsx elements
       const list: JSX.Element[] = [];
       
-      /* 
-      This is the index of the first pokemon in the current set of pokemon being viewed.
-      This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just the current set of pokemon
-      */
-      let pokemonIndex = indexOfFirstPokemonInSet;
-
       // return a no pokemon right now message if no pokemonData is available
       if (!pokeData || pokeData.length === 0) {
         return (
@@ -168,7 +164,13 @@ const PokeDexMainPage = () => {
       }
 
       // otherwise, loop through each object of pokemonData, the current set of pokemon, and format how its displayed on screen
-      pokeData.forEach((pokemon: PokemonLimitedInfo) => {
+      pokeData.forEach((pokemon: PokemonLimitedInfo, index) => {
+        /* 
+        This is the index of the first pokemon in the current set of pokemon being viewed.
+        This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just the current set of pokemon
+        */
+        const pokemonIndex = indexOfFirstPokemonInSet + index;
+
         list.push(
           <div style={pokemonDisplayCard} key={`pokemon${pokemonIndex}`}>
             <img
@@ -186,12 +188,13 @@ const PokeDexMainPage = () => {
             <p style={pokemonDisplayName}>
               {pokemon.name}
             </p>
-            <button>
-              VIEW POKEMON
-            </button>
+            {pokemonIndex && (
+              <button onClick={() => findThisPokemon(String(pokemonIndex))}>
+                VIEW POKEMON
+              </button>
+            )}
           </div>
         );
-        pokemonIndex++
       });
 
       return list;
