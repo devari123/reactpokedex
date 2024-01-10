@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 
 // Define the prop types for the PokeDexSearchBarProps component
 interface PokeDexSearchBarProps {
@@ -11,12 +11,27 @@ interface PokeDexSearchBarProps {
 }
 
 const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSearchPhrase, findThisPokemon }) => {
+  // This function carries out the findThisPokemon function if the user presses Enter
+  const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && findThisPokemon && searchPhrase) {
+      findThisPokemon();
+    }
+  }
 
   return (
     <>
-      {setSearchPhrase && <input type="search" placeholder="Search..." onChange={(event) => setSearchPhrase(event.target.value)} value={searchPhrase} />}
+      {setSearchPhrase && 
+      <input
+        type="search"
+        placeholder="Search..."
+        onChange={(event) => setSearchPhrase(event.target.value)}
+        value={searchPhrase}
+        onKeyDown={(event) => handleOnKeyDown(event)}
+      />}
       {(findThisPokemon && searchPhrase) &&
-        <button onClick={findThisPokemon}>
+        <button
+          onClick={findThisPokemon}
+        >
           Search
         </button>
       }
