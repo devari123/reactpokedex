@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from 'react';
+import React, { KeyboardEvent, CSSProperties } from 'react';
 
 // Define the prop types for the PokeDexSearchBarProps component
 interface PokeDexSearchBarProps {
@@ -11,6 +11,19 @@ interface PokeDexSearchBarProps {
 }
 
 const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSearchPhrase, findThisPokemon }) => {
+  // Styling definitions
+  const searchRoot: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '50%',
+  };
+  const searchBar: CSSProperties = {
+    width: '20%',
+  };
+  const searchButton: CSSProperties = {
+    width: '10%',
+  };
+
   // This function carries out the findThisPokemon function if the user presses Enter
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && findThisPokemon && searchPhrase) {
@@ -19,9 +32,10 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
   }
 
   return (
-    <>
+    <div style={searchRoot}>
       {setSearchPhrase && 
       <input
+        style={searchBar}
         type="search"
         placeholder="Search..."
         onChange={(event) => setSearchPhrase(event.target.value)}
@@ -31,11 +45,12 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
       {(findThisPokemon && searchPhrase) &&
         <button
           onClick={() => findThisPokemon(searchPhrase, true)}
+          style={searchButton}
         >
           Search
         </button>
       }
-    </>
+    </div>
   )
 }
 
