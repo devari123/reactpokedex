@@ -361,7 +361,14 @@ const PokeDexMainPage = () => {
               {pokemon.name}
             </p>
             {pokemonIndex && (
-              <button style={viewPokemonButton} onClick={() => findThisPokemon(String(pokemonIndex), false)}>
+              <button
+                style={viewPokemonButton}
+                onClick={() => {
+                  findThisPokemon(String(pokemonIndex), false);
+                  document.body.scrollTop = 0; // For Safari
+                  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                }
+              }>
                 VIEW POKEMON
               </button>
             )}
@@ -493,7 +500,7 @@ const PokeDexMainPage = () => {
                       {currentPokemonObj && currentPokemonObj.stats.map((stat) => {
                         return (
                           <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', margin: '1.5% 0%' }}>
-                            <p style={{ alignSelf: 'flex-start', margin: '1% 0% 1% 13%', color: 'white', fontWeight: 500 }}>
+                            <p style={{ alignSelf: 'flex-start', margin: '1% 0% 1% 13%', color: 'darkblue', fontWeight: 500 }}>
                               {stat.stat.name.toUpperCase()}
                             </p>
                             <span
