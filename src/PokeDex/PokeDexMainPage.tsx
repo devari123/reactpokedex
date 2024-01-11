@@ -96,9 +96,11 @@ const PokeDexMainPage = () => {
     position: 'relative',
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
-    paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '11%',
+    paddingTop: '11%',
     borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '0%',
     borderTopRightRadius: '0%',
+    maxHeight: (currentPokemonObj && currentPokemonObj.id) ? '19.5vh': '3000vh',
+    overflow: (currentPokemonObj && currentPokemonObj.id) ? 'auto' : 'hidden',
   };
   const screenText: CSSProperties = {
     color: 'white',
@@ -109,7 +111,7 @@ const PokeDexMainPage = () => {
     width: '100%',
     alignSelf: 'center',
     position: 'relative',
-    minHeight: '55vh',
+    minHeight: '62vh',
   };
   const selectedPokemonImg: CSSProperties = {
     width: '43%',

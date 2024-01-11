@@ -10,7 +10,11 @@ const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHisto
   // Styling for the root container
   const previousSearchWordsRoot: CSSProperties = {
     display: 'flex',
-    width: '80%',
+    maxWidth: '44%',
+    position: 'absolute',
+    top: '9%',
+    right: '2%',
+    overflow: 'auto',
   };
   
   /* 
@@ -41,9 +45,14 @@ const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHisto
 
   // Render the search history component
   return (
-    <div style={previousSearchWordsRoot}>
-      {searchHistory && searchHistory.length > 0 && displayCurrentSearchHistory}
-    </div>
+    <>
+      <p style={{ color: 'white', position: 'absolute', fontWeight: 500, top: '6%', right: '2%'  }}>
+        Your Recent Searches
+      </p>
+      <div style={previousSearchWordsRoot}>
+        {searchHistory && searchHistory.length > 0 && displayCurrentSearchHistory}
+      </div>
+    </>
   );
 }
 
