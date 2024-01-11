@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo, CSSProperties } from 'react';
-import PokemonPagination from './PokemonPagination';
+import React, { useState, useRef, useEffect, useCallback, useMemo, CSSProperties } from 'react';
+import PokemonPagination from './PokeDexPagination';
 import PokeDexSearchBar from './PokeDexSearchBar';
 
 // Interface defintions
@@ -63,6 +63,7 @@ interface PokemonIndividualInfo {
 
 const PokeDexMainPage = () => {
   // Variable defintions
+  const selectedPokemonRef = useRef<HTMLDivElement>(null);
   const pokemonLimit = 50;
   const baseImgURL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/';
   const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
@@ -80,7 +81,8 @@ const PokeDexMainPage = () => {
   const componentRoot: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: '#4d4855',
+    backgroundImage: 'linear-gradient(147deg, #4d4855 0%, #000000 74%)',
     width: '100%',
     minHeight: '100vh',
   };
@@ -96,16 +98,117 @@ const PokeDexMainPage = () => {
   const selectedPokemonRoot: CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
-    width: '98%',
+    width: '100%',
     alignSelf: 'center',
-    justifyContent: 'center',
+    position: 'relative',
+    minHeight: '69vh',
+    borderBottomLeftRadius: '3%',
+    borderBottomRightRadius: '13%',
   };
   const selectedPokemonImg: CSSProperties = {
     width: '43%',
+    position: 'absolute',
+  };
+  const selectedPokemonDisplayName: CSSProperties = {
+    color: 'white',
+    margin: '0.5% 2%',
+    fontSize: '3.55rem',
+  };
+
+  // conditional styling for the background of ref component
+  const getBackgroundColor = (types: PokemonTypes[]) => {
+    if (types && types[0]) {
+      switch (types[0].type.name) {
+        case 'fire':
+          return '#f94327';
+        case 'water':
+          return '#045de9';
+        case 'poison':
+          return '#6247aa';
+        case 'dragon':
+          return '#fbb034';
+        case 'psychic':
+          return '';
+        case 'fairy':
+          return '#84fb95';
+        case 'electric':
+          return '#ffef00';
+        case 'steel':
+          return '#2d3436';
+        case 'flying':
+          return '#fffffc';
+        case 'ground':
+          return '#230903';
+        case 'bug':
+          return 'background-color: #edb88b';
+        case 'ghost':
+          return '#c3cbdc';
+        case 'grass':
+          return '#00b712';
+        case 'dark':
+          return '#a399b2';
+        case 'fighting':  
+          return '#166d3b';
+        case 'rock':
+          return '#f9d29d';
+        case 'normal':  
+          return '#aee1f9';
+        case 'stellar':
+          return '#17f9f2';
+        default:
+          return 'black';
+      }
+    }
+    return 'black';
+  };
+
+  const getBackgroundImage = (types: PokemonTypes[]) => {
+    if (types && types[0]) {
+      switch (types[0].type.name) {
+        case 'fire':
+          return 'linear-gradient(316deg, #f94327 0%, #ff7d14 74%)';
+        case 'water':
+          return 'linear-gradient(315deg, #045de9 0%, #09c6f9 74%)';
+        case 'poison':
+          return 'linear-gradient(316deg, #6247aa 0%, #a594f9 74%)';
+        case 'dragon':
+          return 'linear-gradient(315deg, #fbb034 0%, #ffdd00 74%)';
+        case 'psychic':
+          return ''
+        case 'fairy':
+          return 'linear-gradient(315deg, #84fb95 0%, #cef576 74%)';
+        case 'electric':
+          return 'linear-gradient(109.6deg, rgb(255, 219, 47) 11.2%, rgb(244, 253, 0) 100.2%)';
+        case 'steel':
+          return 'linear-gradient(315deg, #2d3436 0%, #d3d3d3 74%)';
+        case 'flying':
+          return 'linear-gradient(315deg, #fffffc 0%, #beb7a4 74%)';
+        case 'ground':
+          return 'linear-gradient(315deg, #230903 0%, #d3b88c 74%)';
+        case 'bug':
+          return 'linear-gradient(315deg, #edb88b 0%, #cd5334 74%)';
+        case 'ghost':
+          return 'linear-gradient(147deg, #c3cbdc 0%, #edf1f4 74%)';
+        case 'grass':
+          return 'linear-gradient(315deg, #00b712 0%, #5aff15 74%)';
+        case 'dark':
+          return 'linear-gradient(147deg, #a399b2 0%, #4d4855 74%)';
+        case 'fighting':
+          return 'linear-gradient(147deg, #166d3b 0%, #000000 74%)';
+        case 'rock':
+          return 'linear-gradient(315deg, #f9d29d 0%, #ffd8cb 74%)';
+        case 'normal':
+          return 'linear-gradient(315deg, #aee1f9 0%, #f6ebe6 74%)';
+        case 'stellar':
+          return 'linear-gradient(315deg, #17f9f2 0%, #b0f9a9 74%)';
+        default:
+          return 'black';
+      }
+    }
+    return 'black';
   };
 
   // Function definitions
-
   // This function fetches the next set of pokemon from the pokemon api
   const getNextSetOfPokemon = () => {
     /* 
@@ -120,7 +223,7 @@ const PokeDexMainPage = () => {
   // This function fecthes the previous set of pokemon from the pokemon api
   const getPreviousSetOfPokemon = () => {
     /* 
-      This will be the index of the first pokemon in the current set of pokemon being viewed.
+      IndexOfFirstPokemonInSet will be the index of the first pokemon in the current set of pokemon being viewed.
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just in relation to
        the current set of pokemon
     */
@@ -128,8 +231,9 @@ const PokeDexMainPage = () => {
     setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl);
   }
 
-  // This function uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
+  // findThisPokemon uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
   const findThisPokemon = useCallback(
+    // findThisPokemon expects two parameters, a string to append to the pokemon api url, and a true or false for if the function should store the string inside of searchHistory
     async (somePhrase: string, addToSearchHistory: boolean) => {
       if (addToSearchHistory) {
         setSearchHistory((prevHistory) => [...prevHistory, somePhrase]);
@@ -197,6 +301,7 @@ const PokeDexMainPage = () => {
             <img
               src={`${baseImgURL}${pokemonIndex}.png`}
               alt="imageofpokemon"
+              onClick={() => findThisPokemon(String(pokemonIndex), false)}
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 
                 // Handle image loading errors and replace it with a default image
@@ -210,9 +315,7 @@ const PokeDexMainPage = () => {
               {pokemon.name}
             </p>
             {pokemonIndex && (
-              <button onClick={() => {
-                findThisPokemon(String(pokemonIndex), false)
-              }}>
+              <button onClick={() => findThisPokemon(String(pokemonIndex), false)}>
                 VIEW POKEMON
               </button>
             )}
@@ -262,11 +365,21 @@ const PokeDexMainPage = () => {
       localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
 
+    if (selectedPokemonRef.current) {
+      const types = currentPokemonObj?.types;
+      if (types) {
+        const backgroundColor = getBackgroundColor(types);
+        const backgroundImage = getBackgroundImage(types);
+        selectedPokemonRef.current.style.backgroundColor = backgroundColor;
+        selectedPokemonRef.current.style.backgroundImage = backgroundImage;
+      }
+    }
+
     // This is a Cleanup function that sets the ignore variable to true when the component is unmounted
     return () => {
       ignore = true;
     }
-  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData]);
+  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj]);
 
   return (
     <div style={componentRoot}>
@@ -278,18 +391,18 @@ const PokeDexMainPage = () => {
       {(pokemonData && pokemonData.length > 0 && !isLoading) && (
         <>
           {(currentPokemonObj && currentPokemonObj.id) && (
-            <div style={selectedPokemonRoot}>
+            <div ref={selectedPokemonRef} style={selectedPokemonRoot}>
+              <h1 style={selectedPokemonDisplayName}>{currentPokemonObj.name.toUpperCase()}</h1>
               <img src={`${baseImgURL}${currentPokemonObj.id}.png`} alt="" style={selectedPokemonImg} />
-              <p style={screenText}>
+              {/* <img src={`${process.env.PUBLIC_URL}/icons8-ocean-64.png`} alt="water"  style={{ zIndex: 1000 }} /> */}
+              {/* <p style={screenText}>
                 {currentPokemonObj.abilities.map((ability) => {
                     return (
-                      <div>
-                        {ability.ability.name}
-                      </div>
+                      {ability.ability.name}
                     )
                   })
                 }
-              </p>
+              </p> */}
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
