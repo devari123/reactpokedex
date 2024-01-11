@@ -1,6 +1,33 @@
-# Getting Started with Create React App
+<!-- GETTING STARTED -->
+## Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To get a copy of this project on your local machine, follow these steps.
+
+### Prerequisites
+
+You will need npm if it is not already installed on your machine. To install npm, run the command below
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+Setting the app up for use requires two steps
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/devari123/Project-Name.git
+   ```
+2. Install the necessary NPM packages
+   ```sh
+   npm install
+   ```
+3. To start using the application, use
+   ```sh
+   npm start
+   ```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Available Scripts
 
@@ -29,18 +56,62 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#incomplete-tasks">Tasks I Did Not Complete</a></li>
+    <li><a href="#changes-for-concurrent-env">Changes I Would Make If App Was Running In Concurrent Environment</a></li>
+    <li><a href="#coding-decisions-and-reasoning">Coding Decisions Made Throughout The Application</a></li>
+  </ol>
+</details>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<!-- USAGE -->
+## Usage
 
-## Learn More
+Once the app is available and running on your local machine, you will be able to:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* View The Sprites, Stats, Names and Id Of Every Pokemon In The PokeDex
+* Search For Any Pokemon in the PokeDex Using Their Name Or Their Number
+* View Your Past Searches and Click On Any One Of Those Previous Entries To Search Using That Phrase Again.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- INCOMPLETE TASKS -->
+## incomplete-tasks
+
+Allthough the application fulfills every business and technical requirement, and even has more functionality than what was asked for, there are practices that I find absolutely necessary in coding that I didn't completely address with this project due to the fact that it had a time limit. A few of those practices include:
+* Making sure every part of the UI/UX is responsive and fits all screen sizes. I didn't do any intensive work to make sure the application was responsive since it wasn't listed as a requirement
+* Breaking sections of code out into reusable components where it makes sense. I did create multiple reusable components to help improve code readability, however, I would and could have created more reusable components if I had the time to do so, especially in a real world project since I know reusable components can potentially make it easier to read the code, build on top of the code, and expand upon the application overall in the long and short term.
+* I would have also done a lot more with the data gathered from the API and made the app look nicer than it does currently, even though it doesn't look too bad as is.
+* Address the somewhat small bugs I've noticed within the application
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CHANGES I WOULD MAKE FOR APP IN CONCURRENT ENV -->
+## changes-for-concurrent-env
+
+Aside from the modifications I mentioned I would make in the previous "Incomplete Tasks" section, one thing I would do differently is look at the pros and cons of using localStorage to store all past searches made by a user. If the intention was to have that feature available for each user and it was deemed as necessary, I would look into using cookies as this would be a more effective way to store data as it can't be as easily manipulated, and it would actually show up for each user regardless of what device they were using or not using.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CODING DECISIONS MADE THROUGHOUT THE APP  -->
+## coding-decisions-and-reasoning
+
+In regards to the coding choices I made, I made sure to treat this as if it was something running on production and being used by multiple people. I leveraged multiple react hooks to make sure the application was using and employing good, efficient coding practices, and inside of my code I made comments on why I used certain hooks in different places
