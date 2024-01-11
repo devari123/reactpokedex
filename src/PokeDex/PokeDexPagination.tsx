@@ -16,12 +16,14 @@ const PokeDexPagination: React.FC<PokemonPaginationProps> = ({ getNextSetOfPokem
     width: '17%',
     margin: '1% 0% 1%',
     paddingRight: '2%',
-    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    top: '2.5%'
   };
   return (
     <div style={paginationRoot}>
-      {getNextSetOfPokemon && <button onClick={getNextSetOfPokemon}>Next</button>}
       {getPreviousSetOfPokemon && <button onClick={getPreviousSetOfPokemon}>Previous</button>}
+      {getNextSetOfPokemon && <button onClick={getNextSetOfPokemon}>Next</button>}
     </div>
   )
 }

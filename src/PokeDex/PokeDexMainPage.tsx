@@ -85,6 +85,7 @@ const PokeDexMainPage = () => {
     backgroundImage: 'linear-gradient(147deg, #4d4855 0%, #000000 74%)',
     width: '100%',
     minHeight: '100vh',
+    position: 'relative',
   };
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
@@ -93,7 +94,7 @@ const PokeDexMainPage = () => {
     alignSelf: 'center',
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
-    paddingTop: '6%',
+    paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '19%' : '11%',
     borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
     borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
   };
@@ -117,6 +118,11 @@ const PokeDexMainPage = () => {
     margin: '0.5% 2%',
     fontSize: '3.55rem',
   };
+  const findPokemonText: CSSProperties = {
+    width: '100%', fontSize: '4rem', textAlign: 'right',
+    marginRight: '6%', color: 'white',
+    marginBottom: '1.5%'
+  };
 
   // conditional styling for the background of ref component
   const getBackgroundColor = (types: PokemonTypes[]) => {
@@ -131,7 +137,7 @@ const PokeDexMainPage = () => {
         case 'dragon':
           return '#fbb034';
         case 'psychic':
-          return '';
+          return '#84fb95';
         case 'fairy':
           return '#84fb95';
         case 'electric':
@@ -177,7 +183,7 @@ const PokeDexMainPage = () => {
         case 'dragon':
           return 'linear-gradient(315deg, #fbb034 0%, #ffdd00 74%)';
         case 'psychic':
-          return ''
+          return 'linear-gradient(315deg, #84fb95 0%, #cef576 74%)';
         case 'fairy':
           return 'linear-gradient(315deg, #84fb95 0%, #cef576 74%)';
         case 'electric':
@@ -397,6 +403,7 @@ const PokeDexMainPage = () => {
             <div style={selectedPokemonRoot}>
               <h1 style={selectedPokemonDisplayName}>{currentPokemonObj.name.toUpperCase()}</h1>
               <img src={`${baseImgURL}${currentPokemonObj.id}.png`} alt="" style={selectedPokemonImg} />
+              
               {/* <img src={`${process.env.PUBLIC_URL}/icons8-ocean-64.png`} alt="water"  style={{ zIndex: 1000 }} /> */}
               {/* <p style={screenText}>
                 {currentPokemonObj.abilities.map((ability) => {
@@ -413,7 +420,13 @@ const PokeDexMainPage = () => {
             getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
             getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
           />
+          
           <div style={pokemonDisplayRoot}>
+            {(!currentPokemonObj) && (
+              <p style={findPokemonText}>
+                Find That Pokemon
+              </p>
+            )}
             {displayCurrentPokemon}
           </div>
           <PokemonPagination 
