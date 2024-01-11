@@ -13,11 +13,11 @@ const PokeDexPagination: React.FC<PokemonPaginationProps> = ({ getNextSetOfPokem
   const paginationRoot: CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
-    width: '17%',
+    width: '16%',
     margin: '1% 0% 1%',
     alignSelf: 'flex-end',
     position: 'fixed',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     bottom: '1.5%',
     right: '2.5%',
     backgroundColor: 'rgba(127, 127, 127, 0.75)',
