@@ -97,8 +97,8 @@ const PokeDexMainPage = () => {
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
     paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '11%',
-    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '15%' : '0%',
-    borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '3%' : '0%',
+    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '0%',
+    borderTopRightRadius: '0%',
   };
   const screenText: CSSProperties = {
     color: 'white',
@@ -120,6 +120,7 @@ const PokeDexMainPage = () => {
     color: 'white',
     margin: '0.5% 2%',
     fontSize: '3.55rem',
+    zIndex: 11,
   };
   const findPokemonText: CSSProperties = {
     width: '100%', fontSize: '4rem', textAlign: 'right',
@@ -245,23 +246,34 @@ const PokeDexMainPage = () => {
 
   // findThisPokemon uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
   const findThisPokemon = useCallback(
-    // findThisPokemon expects two parameters, a string to append to the pokemon api url, and a true or false for if the function should store the string inside of searchHistory
+    // findThisPokemon expects two parameters, a nonempty string to append to the pokemon api url, and a true or false for if the function should store the string inside of searchHistory
     async (somePhrase: string, addToSearchHistory: boolean) => {
-      if (addToSearchHistory) {
-        setSearchHistory((prevHistory) => [...prevHistory, somePhrase]);
-      }
-      const urlForRequest = `${baseAPIURL}${somePhrase.toLowerCase()}`;
-      try {
-        // Fetch data from the current URL
-        const response = await fetch(urlForRequest);
+      const isNumericString = !isNaN(Number(somePhrase));
+      // a regular expression to check if the string has no numbers present
+      const hasNoNumbers = /^[^0-9]*$/.test(somePhrase);
 
-        // Parse the response as json
-        const json = await response.json();
-
-        setCurrentPokemonObj(json);
-      } catch (error) {
-        // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-        console.log("error pulling data for one pokemon", error);
+      // validate whether 'somePhrase' is an empty string, null, or something besides a number or a string with no numbers
+      if (somePhrase !== null && somePhrase.trim() !== '' && ((isNumericString && parseInt(somePhrase,10).toString().length <= 4) || hasNoNumbers)) {
+        // if true was passed in for the 'addToSearchHistory' parameter, add the value to the searchHistory value
+        if (addToSearchHistory) {
+          setSearchHistory((prevHistory) => [...prevHistory, somePhrase]);
+        }
+        const urlForRequest = (isNumericString) ? `${baseAPIURL}${parseInt(somePhrase,10)}` : `${baseAPIURL}${somePhrase.toLowerCase()}`;
+        try {
+          // Fetch data from the current URL
+          const response = await fetch(urlForRequest);
+  
+          // Parse the response as json
+          const json = await response.json();
+  
+          setCurrentPokemonObj(json);
+        } catch (error) {
+          // Display a div as an alert that the requested pokemon can not be pulled
+          console.log("error pulling data for one pokemon", error);
+        }
+      } else {
+        // Display a div as an alert that the user input is invalid and only numbers and names will be accepted
+        console.log('hey no ts not a number or string')
       }
     },
     []
