@@ -17,7 +17,7 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
     flexDirection: 'row',
     width: '40%',
     margin: '0% 0% 1%',
-    paddingRight: '2%',
+    marginRight: '2.5%',
     alignSelf: 'flex-end',
     top: '0.9%',
     position: 'absolute',

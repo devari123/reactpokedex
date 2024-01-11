@@ -18,9 +18,9 @@ const PokeDexPagination: React.FC<PokemonPaginationProps> = ({ getNextSetOfPokem
     alignSelf: 'flex-end',
     position: 'fixed',
     justifyContent: 'space-evenly',
-    bottom: '7.5%',
-    right: '4%',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    bottom: '1.5%',
+    right: '2.5%',
+    backgroundColor: 'rgba(127, 127, 127, 0.75)',
   };
   const buttonStyling: CSSProperties = {
     width: '36%',

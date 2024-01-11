@@ -46,6 +46,9 @@ const PokeDexMainPage = () => {
   } = useSelector((state: RootState) => state.pokedex);
   const [searchPhrase, setSearchPhrase] = useState<string>("");
   const [searchHistory, setSearchHistory] = useState<Array<string>>(JSON.parse(localStorage.getItem('searchHistory') || '[]'));
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+  const [currentCategory, setCurrentCategory] = useState<string>("stats");
 
   // Styling definitions
   const componentRoot: CSSProperties = {
@@ -57,6 +60,16 @@ const PokeDexMainPage = () => {
     minHeight: '100vh',
     position: 'relative',
   };
+  const errorMessages: CSSProperties = {
+    width: '27%',
+    backgroundColor: 'rgb(255, 0, 0, 0.5)',
+    position: 'absolute',
+    top: '3.2%',
+    right: '2%',
+    zIndex: 100,
+    textAlign: 'center',
+    color: 'white'
+  }
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
@@ -65,10 +78,8 @@ const PokeDexMainPage = () => {
     position: 'relative',
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
-    paddingTop: '10%',
-    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '0%',
-    borderTopRightRadius: '0%',
-    maxHeight: (currentPokemonObj && currentPokemonObj.id) ? '19.5vh': '3000vh',
+    paddingTop: '11%',
+    // maxHeight: (currentPokemonObj && currentPokemonObj.id) ? '17.5vh': '1000vh',
     overflow: (currentPokemonObj && currentPokemonObj.id) ? 'auto' : 'hidden',
   };
   const screenText: CSSProperties = {
@@ -97,6 +108,42 @@ const PokeDexMainPage = () => {
     width: '100%', fontSize: '4rem', textAlign: 'right',
     marginRight: '6%', color: 'white',
     marginBottom: '1.5%'
+  };
+  const pokeCard: CSSProperties = {
+    width: '35%',
+    backgroundColor: 'rgb(255, 255, 255, 0.5)',
+    position: 'absolute',
+    top: '28%',
+    right: '16%',
+    height: '58vh',
+    zIndex: 31,
+    overflow: 'auto',
+    borderRadius: '10%',
+    padding: '1.5%'
+  };
+  const statsHeading: CSSProperties = {
+    fontWeight: 600,
+    fontSize: '2.5rem',
+    color: 'white',
+    marginLeft: '4%'
+  };
+  const typesContainer: CSSProperties = {
+    display: 'flex', flexWrap: 'wrap', maxWidth: '30%'
+  };
+  const statsContainer: CSSProperties = {
+    display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'
+  };
+  const movesContainer: CSSProperties = {
+    display: 'flex', flexWrap: 'wrap', width: '100%',
+  };
+  const viewPokemonButton: CSSProperties = {
+    alignSelf: 'center', width: '49%', backgroundColor: 'green', margin: '4% 0% 1%', height: '4vh', color: 'white'
+  };
+  const currentPokemonNumber: CSSProperties = {
+    color: 'white',
+    fontWeight: 600,
+    fontSize: '4.5rem',
+    zIndex: 30
   };
 
   // conditional styling for the background of ref component
@@ -240,11 +287,15 @@ const PokeDexMainPage = () => {
           dispatch(setCurrentPokemonObj(json));
         } catch (error) {
           // Display a div as an alert that the requested pokemon can not be pulled
-          console.log("error pulling data for one pokemon", error);
+          setErrorMessage("Sorry, We Couldnt Find Any Information On That Pokemon");
+          setError(true);
+          setTimeout(() => { setError(false); }, 3000);
         }
       } else {
         // Display a div as an alert that the user input is invalid and only numbers and names will be accepted
-        console.log('hey no ts not a number or string')
+        setErrorMessage("You must enter a valid number or name of a pokemon");
+        setError(true);
+        setTimeout(() => { setError(false); }, 3000);
       }
     },
     []
@@ -310,7 +361,7 @@ const PokeDexMainPage = () => {
               {pokemon.name}
             </p>
             {pokemonIndex && (
-              <button onClick={() => findThisPokemon(String(pokemonIndex), false)}>
+              <button style={viewPokemonButton} onClick={() => findThisPokemon(String(pokemonIndex), false)}>
                 VIEW POKEMON
               </button>
             )}
@@ -344,8 +395,9 @@ const PokeDexMainPage = () => {
           dispatch(setIsLoading(false));
         }
       } catch (error) {
-        // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
-        console.log("error pulling data", error)
+        setErrorMessage("We were unable to fetch the data at this time");
+        setError(true);
+        setTimeout(() => { setError(false); }, 3000);
       }
     };
 
@@ -389,7 +441,79 @@ const PokeDexMainPage = () => {
             <div style={selectedPokemonRoot}>
               <h1 style={selectedPokemonDisplayName}>{currentPokemonObj.name.toUpperCase()}</h1>
               <img src={`${baseImgURL}${currentPokemonObj.id}.png`} alt="" style={selectedPokemonImg} />
-              
+              <p style={currentPokemonNumber}>
+                {`#${currentPokemonObj.id}`}
+              </p>
+              <div style={pokeCard}>
+                <h1 style={statsHeading} onClick={() => setCurrentCategory("stats")}>
+                  STATS
+                </h1>
+                {/* <h1 style={statsHeading} onClick={() => setCurrentCategory("moves")}>
+                  MOVES
+                </h1> */}
+                {/* <h1 style={statsHeading} onClick={() => setCurrentCategory("abilities")}>
+                  ABILITIES
+                </h1> */}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {(currentCategory === "types") && (
+                    <div style={typesContainer}>
+                      {currentPokemonObj && currentPokemonObj.types.map((type) => {
+                        return (
+                          <div>
+                            {type.type.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {currentCategory === "abilities" && (
+                    <div style={typesContainer}>
+                      {currentPokemonObj && currentPokemonObj.abilities.map((ability) => {
+                        return (
+                          <div>
+                            {ability.ability.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {(currentCategory === "moves") && (
+                    <div style={movesContainer}>
+                      {currentPokemonObj && currentPokemonObj.moves.map((move) => {
+                        return (
+                          <div style={{ minWidth: '25%', fontWeight: 600 }}>
+                            {move.move.name}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {(currentCategory === "stats") && (
+                    <div style={statsContainer}>
+                      {currentPokemonObj && currentPokemonObj.stats.map((stat) => {
+                        return (
+                          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', margin: '1.5% 0%' }}>
+                            <p style={{ alignSelf: 'flex-start', margin: '1% 0% 1% 13%', color: 'white', fontWeight: 500 }}>
+                              {stat.stat.name.toUpperCase()}
+                            </p>
+                            <span
+                              style={{
+                                height: '25px',
+                                width: '75%',
+                                backgroundColor: '#bbb',
+                                borderRadius: '0%',
+                                display: 'inline-block', 
+                              }}
+                            >
+                              <span style={{ display: 'inline-block', width: (stat.base_stat > 100) ? '100%' : `${stat.base_stat}%`, height: '100%', backgroundColor: 'black' }} />
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
               {/* <img src={`${process.env.PUBLIC_URL}/icons8-ocean-64.png`} alt="water"  style={{ zIndex: 1000 }} /> */}
               {/* <p style={screenText}>
                 {currentPokemonObj.abilities.map((ability) => {
@@ -402,7 +526,8 @@ const PokeDexMainPage = () => {
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
-          <PokeDexSearchHistory searchHistory={searchHistory} findThisPokemon={findThisPokemon} />
+          <PokeDexSearchHistory searchHistory={searchHistory} findThisPokemon={findThisPokemon} setSearchPhrase={setSearchPhrase}/>
+          {error && <div style={errorMessages}>{errorMessage}</div>}
           <div style={pokemonDisplayRoot}>
             {(!currentPokemonObj) && (
               <p style={findPokemonText}>
