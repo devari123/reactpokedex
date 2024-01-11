@@ -136,9 +136,6 @@ const PokeDexMainPage = () => {
   const movesContainer: CSSProperties = {
     display: 'flex', flexWrap: 'wrap', width: '100%',
   };
-  const viewPokemonButton: CSSProperties = {
-    alignSelf: 'center', width: '49%', backgroundColor: 'green', margin: '4% 0% 1%', height: '4vh', color: 'white'
-  };
   const currentPokemonNumber: CSSProperties = {
     color: 'white',
     fontWeight: 600,
@@ -298,7 +295,7 @@ const PokeDexMainPage = () => {
         setTimeout(() => { setError(false); }, 3000);
       }
     },
-    []
+    [dispatch]
   );
 
   /*
@@ -320,6 +317,9 @@ const PokeDexMainPage = () => {
       const pokemonDisplayName: CSSProperties = {
         color: 'white',
         textAlign: 'center',
+      };
+      const viewPokemonButton: CSSProperties = {
+        alignSelf: 'center', width: '49%', backgroundColor: 'green', margin: '4% 0% 1%', height: '4vh', color: 'white'
       };
 
       // defining an array that will hold jsx elements
