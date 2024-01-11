@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, CSSProperties } from 'react';
 import PokemonPagination from './PokeDexPagination';
 import PokeDexSearchBar from './PokeDexSearchBar';
+import PokeDexSearchHistory from './PokeDexSearchHistory';
 
 // Interface defintions
 // This interface defines an object that holds a variable, name, for each Pokemon in a given set of Pokemon
@@ -86,7 +87,6 @@ const PokeDexMainPage = () => {
     width: '100%',
     minHeight: '100vh',
     position: 'relative',
-    overflow: 'hidden',
   };
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
@@ -97,7 +97,7 @@ const PokeDexMainPage = () => {
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
     paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '11%',
-    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '17%' : '0%',
+    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '15%' : '0%',
     borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '3%' : '0%',
   };
   const screenText: CSSProperties = {
@@ -419,6 +419,7 @@ const PokeDexMainPage = () => {
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
+          <PokeDexSearchHistory searchHistory={searchHistory} />
           <div style={pokemonDisplayRoot}>
             {(!currentPokemonObj) && (
               <p style={findPokemonText}>
