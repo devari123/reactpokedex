@@ -143,7 +143,7 @@ const PokeDexMainPage = () => {
     zIndex: 30
   };
 
-  // conditional styling for the background of ref component
+  // Conditional styling based on Pokemon types
   const getBackgroundColor = (types: PokemonTypes[]) => {
     if (types && types[0]) {
       switch (types[0].type.name) {
@@ -354,7 +354,6 @@ const PokeDexMainPage = () => {
                 const imgElement = e.currentTarget;
                 imgElement.src = `${process.env.PUBLIC_URL}/pokeball.png`;
                 imgElement.alt = 'defaultImage';
-
               }}
             />
             <p style={pokemonDisplayName}>
@@ -384,9 +383,16 @@ const PokeDexMainPage = () => {
 
   useEffect(() => {
     let ignore = false;
+    let isFetching = false;
 
     // this is a function to fetch the list of pokemon from the pokemon api
     const fetchPokemon = async () => {
+      if (isFetching) {
+        return; // If a fetch is already in progress, exit early
+      }
+    
+      isFetching = true; // Set the flag to true to indicate that a fetch is in progress
+
       try {
         // Fetch data from the current URL
         const response = await fetch(currentSetOfPokemonUrl);
@@ -405,6 +411,8 @@ const PokeDexMainPage = () => {
         setErrorMessage("We were unable to fetch the data at this time");
         setError(true);
         setTimeout(() => { setError(false); }, 3000);
+      } finally {
+        isFetching = false; // Resets the flag regardless of success or failure
       }
     };
 
