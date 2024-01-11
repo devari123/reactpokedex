@@ -4,18 +4,30 @@ import React, { CSSProperties, useMemo } from 'react';
 // interface definition of the type of prop expected
 interface PokeDexSearchHistoryProps {
   searchHistory: string[] | null;
+  // A function that searches for a singular pokemon based on the user's input
+  findThisPokemon: null | ((somePhrase: string, addToSearchHistory: boolean) => void);
 }
 
-const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHistory }) => {
+const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHistory, findThisPokemon }) => {
   // Styling for the root container
   const previousSearchWordsRoot: CSSProperties = {
     display: 'flex',
     maxWidth: '44%',
-    position: 'absolute',
-    top: '9%',
+    position: 'fixed',
+    top: '11%',
     right: '2%',
     overflow: 'auto',
+    zIndex: 30,
   };
+
+  const yourRecentSearchesText: CSSProperties = {
+      color: 'white',
+      position: 'fixed',
+      fontWeight: 500,
+      top: '8%',
+      right: '2%',
+      zIndex: 30,
+    };
   
   /* 
     Function to display the search history as chips. The larger the 'searchHistory' array stored in localStorage gets, the more intensive this function becomes.
@@ -37,16 +49,21 @@ const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHisto
 
     // Map through searchHistory and create an array of JSX elements that display every past search in a formatted way
     return searchHistory.map((previousSearchWord, index) => (
-      <div style={previousSearchWordChip} key={index}>
+      <button style={previousSearchWordChip} key={index} onClick={() => {
+        if (findThisPokemon) {
+          // since the function exists, we will call it using a previous search word clicked by a user, and we will pass false so the search word isnt duplicated in the searchHistory array
+          findThisPokemon(previousSearchWord, false);
+        }
+      }}>
         {previousSearchWord}
-      </div>
+      </button>
     ));
-  }, [searchHistory]);
+  }, [searchHistory, findThisPokemon]);
 
   // Render the search history component
   return (
     <>
-      <p style={{ color: 'white', position: 'absolute', fontWeight: 500, top: '6%', right: '2%'  }}>
+      <p style={yourRecentSearchesText}>
         Your Recent Searches
       </p>
       <div style={previousSearchWordsRoot}>

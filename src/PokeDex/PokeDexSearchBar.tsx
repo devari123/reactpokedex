@@ -26,6 +26,7 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
     width: '100%',
     alignSelf: 'right',
     height: '4vh',
+    zIndex: 30,
   };
   const searchButton: CSSProperties = {
     width: '10%',

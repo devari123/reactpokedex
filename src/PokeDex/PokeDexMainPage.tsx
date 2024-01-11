@@ -96,7 +96,7 @@ const PokeDexMainPage = () => {
     position: 'relative',
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
-    paddingTop: '11%',
+    paddingTop: '10%',
     borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '0%',
     borderTopRightRadius: '0%',
     maxHeight: (currentPokemonObj && currentPokemonObj.id) ? '19.5vh': '3000vh',
@@ -433,7 +433,7 @@ const PokeDexMainPage = () => {
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
-          <PokeDexSearchHistory searchHistory={searchHistory} />
+          <PokeDexSearchHistory searchHistory={searchHistory} findThisPokemon={findThisPokemon} />
           <div style={pokemonDisplayRoot}>
             {(!currentPokemonObj) && (
               <p style={findPokemonText}>

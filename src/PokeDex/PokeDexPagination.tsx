@@ -15,12 +15,12 @@ const PokeDexPagination: React.FC<PokemonPaginationProps> = ({ getNextSetOfPokem
     flexDirection: 'row',
     width: '17%',
     margin: '1% 0% 1%',
-    paddingRight: '2%',
     alignSelf: 'flex-end',
     position: 'fixed',
-    justifyContent: 'space-between',
-    bottom: '1.5%',
+    justifyContent: 'space-evenly',
+    bottom: '7.5%',
     right: '4%',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
   };
   const buttonStyling: CSSProperties = {
     width: '36%',
@@ -33,7 +33,6 @@ const PokeDexPagination: React.FC<PokemonPaginationProps> = ({ getNextSetOfPokem
       ) : (
         <button disabled={getPreviousSetOfPokemon === null} onClick={getPreviousSetOfPokemon} style={buttonStyling}>Back</button>
       )}
-      {}
       {getNextSetOfPokemon === null ? (
         <button disabled={getNextSetOfPokemon === null}>Next Page</button>
       ) : (
