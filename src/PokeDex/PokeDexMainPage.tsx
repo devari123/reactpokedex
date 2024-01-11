@@ -86,17 +86,19 @@ const PokeDexMainPage = () => {
     width: '100%',
     minHeight: '100vh',
     position: 'relative',
+    overflow: 'hidden',
   };
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
     width: '100%',
     alignSelf: 'center',
+    position: 'relative',
     backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
     backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
-    paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '19%' : '11%',
-    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
-    borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
+    paddingTop: (currentPokemonObj && currentPokemonObj.id) ? '12%' : '11%',
+    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '17%' : '0%',
+    borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '3%' : '0%',
   };
   const screenText: CSSProperties = {
     color: 'white',
@@ -107,11 +109,12 @@ const PokeDexMainPage = () => {
     width: '100%',
     alignSelf: 'center',
     position: 'relative',
-    minHeight: '44vh',
+    minHeight: '55vh',
   };
   const selectedPokemonImg: CSSProperties = {
     width: '43%',
     position: 'absolute',
+    zIndex: 10,
   };
   const selectedPokemonDisplayName: CSSProperties = {
     color: 'white',
@@ -416,23 +419,18 @@ const PokeDexMainPage = () => {
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
-          <PokemonPagination 
-            getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
-            getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
-          />
-          
           <div style={pokemonDisplayRoot}>
             {(!currentPokemonObj) && (
               <p style={findPokemonText}>
                 Find That Pokemon
               </p>
             )}
+            <PokemonPagination 
+              getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
+              getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
+            />
             {displayCurrentPokemon}
           </div>
-          <PokemonPagination 
-            getNextSetOfPokemon={nextSetOfPokemonUrl ? getNextSetOfPokemon : null}
-            getPreviousSetOfPokemon={prevSetOfPokemonUrl ? getPreviousSetOfPokemon : null}
-          />
         </>
       )}
     </div>
