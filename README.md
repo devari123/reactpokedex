@@ -89,14 +89,6 @@ Once the app is available and running on your local machine, you will be able to
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-### Built With
-
-* [![React][React.js]][React-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- INCOMPLETE TASKS -->
 ## incomplete-tasks
 
@@ -104,6 +96,7 @@ Allthough the application fulfills every business and technical requirement, and
 * Making sure every part of the UI/UX is responsive and fits all screen sizes. I didn't do any intensive work to make sure the application was responsive since it wasn't listed as a requirement
 * Breaking sections of code out into reusable components where it makes sense. I did create multiple reusable components to help improve code readability, however, I would and could have created more reusable components if I had the time to do so, especially in a real world project since I know reusable components can potentially make it easier to read the code, build on top of the code, and expand upon the application overall in the long and short term.
 * I would have also done a lot more with the data gathered from the API and made the app look nicer than it does currently, even though it doesn't look too bad as is.
+* Address the somewhat small bugs I've noticed within the application
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
