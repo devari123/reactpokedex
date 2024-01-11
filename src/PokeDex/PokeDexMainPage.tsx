@@ -89,8 +89,13 @@ const PokeDexMainPage = () => {
   const pokemonDisplayRoot: CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
-    width: '96%',
+    width: '100%',
     alignSelf: 'center',
+    backgroundColor: (currentPokemonObj && currentPokemonObj.id) ? '#4d4855' : 'transparent',
+    backgroundImage: (currentPokemonObj && currentPokemonObj.id) ? 'linear-gradient(147deg, #4d4855 0%, #000000 74%)' : 'transparent',
+    paddingTop: '6%',
+    borderTopLeftRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
+    borderTopRightRadius: (currentPokemonObj && currentPokemonObj.id) ? '6%' : '0%',
   };
   const screenText: CSSProperties = {
     color: 'white',
@@ -101,9 +106,7 @@ const PokeDexMainPage = () => {
     width: '100%',
     alignSelf: 'center',
     position: 'relative',
-    minHeight: '69vh',
-    borderBottomLeftRadius: '3%',
-    borderBottomRightRadius: '13%',
+    minHeight: '44vh',
   };
   const selectedPokemonImg: CSSProperties = {
     width: '43%',
@@ -382,7 +385,7 @@ const PokeDexMainPage = () => {
   }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj]);
 
   return (
-    <div style={componentRoot}>
+    <div ref={selectedPokemonRef} style={componentRoot}>
       {isLoading && (
           <p style={screenText}>
             Gotta Catch Em All ...
@@ -391,7 +394,7 @@ const PokeDexMainPage = () => {
       {(pokemonData && pokemonData.length > 0 && !isLoading) && (
         <>
           {(currentPokemonObj && currentPokemonObj.id) && (
-            <div ref={selectedPokemonRef} style={selectedPokemonRoot}>
+            <div style={selectedPokemonRoot}>
               <h1 style={selectedPokemonDisplayName}>{currentPokemonObj.name.toUpperCase()}</h1>
               <img src={`${baseImgURL}${currentPokemonObj.id}.png`} alt="" style={selectedPokemonImg} />
               {/* <img src={`${process.env.PUBLIC_URL}/icons8-ocean-64.png`} alt="water"  style={{ zIndex: 1000 }} /> */}
