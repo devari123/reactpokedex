@@ -30,6 +30,7 @@ const PokeDexSearchBar: React.FC<PokeDexSearchBarProps> = ({ searchPhrase, setSe
   };
   const searchButton: CSSProperties = {
     width: '10%',
+    zIndex: 30,
   };
 
   // This function carries out the findThisPokemon function if the user presses Enter

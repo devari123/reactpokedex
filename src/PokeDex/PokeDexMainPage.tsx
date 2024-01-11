@@ -1,4 +1,15 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo, CSSProperties } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setPokemonData,
+  setIsLoading,
+  setCurrentPokemonObj,
+  setCurrentSetOfPokemonUrl,
+  setNextSetOfPokemonUrl,
+  setPrevSetOfPokemonUrl,
+  setIndexOfFirstPokemonInSet,
+} from './redux/pokeslice';
+import { RootState } from '../store';
 import PokemonPagination from './PokeDexPagination';
 import PokeDexSearchBar from './PokeDexSearchBar';
 import PokeDexSearchHistory from './PokeDexSearchHistory';
@@ -9,39 +20,6 @@ interface PokemonLimitedInfo {
   name: string;
 }
 
-// These interfaces define the a Pokemon's abilities, stats, moves, sprites, and types
-interface PokemonAbilities {
-  ability: {
-    name: string;
-    url: string;
-  };
-  is_hidden: boolean;
-  slot: number;
-}
-
-interface PokemonStats {
-  base_stat: number;
-  effort: number;
-  stat: {
-    name: string;
-    url: string;
-  };
-}
-
-interface PokemonMoves {
-  move: {
-    name: string;
-  };
-}
-
-interface PokemonSprites {
-  other: {
-    home: {
-      front_default: string | null;
-    };
-  }
-}
-
 interface PokemonTypes {
   slot: number;
   type: {
@@ -50,31 +28,22 @@ interface PokemonTypes {
   };
 }
 
-interface PokemonIndividualInfo {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  abilities: PokemonAbilities[];
-  moves: PokemonMoves[];
-  sprites: PokemonSprites;
-  stats: PokemonStats[];
-  types: PokemonTypes[];
-}
-
 const PokeDexMainPage = () => {
   // Variable defintions
   const selectedPokemonRef = useRef<HTMLDivElement>(null);
-  const pokemonLimit = 50;
+  // const pokemonLimitPerPage = 50;
   const baseImgURL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/';
   const baseAPIURL = 'https://pokeapi.co/api/v2/pokemon/';
-  const [pokemonData, setPokemonData] = useState<PokemonLimitedInfo[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentPokemonObj, setCurrentPokemonObj] = useState<PokemonIndividualInfo>();
-  const [currentSetOfPokemonUrl, setCurrentSetOfPokemonUrl] = useState<string>(`${baseAPIURL}?limit=${pokemonLimit}`);
-  const [nextSetOfPokemonUrl, setNextSetOfPokemonUrl] = useState<string>("");
-  const [prevSetOfPokemonUrl, setPrevSetOfPokemonUrl] = useState<string>("");
-  const [indexOfFirstPokemonInSet, setIndexOfFirstPokemonInSet] = useState<number>(1);
+  const dispatch = useDispatch();
+  const {
+    pokemonData,
+    isLoading,
+    currentPokemonObj,
+    currentSetOfPokemonUrl,
+    nextSetOfPokemonUrl,
+    prevSetOfPokemonUrl,
+    indexOfFirstPokemonInSet,
+  } = useSelector((state: RootState) => state.pokedex);
   const [searchPhrase, setSearchPhrase] = useState<string>("");
   const [searchHistory, setSearchHistory] = useState<Array<string>>(JSON.parse(localStorage.getItem('searchHistory') || '[]'));
 
@@ -231,8 +200,8 @@ const PokeDexMainPage = () => {
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects, instead of just in relation to
       the current set of pokemon
     */
-    setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50);
-    setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl);
+    dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50));
+    dispatch(setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl));
   }
 
   // This function fecthes the previous set of pokemon from the pokemon api
@@ -242,8 +211,8 @@ const PokeDexMainPage = () => {
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just in relation to
        the current set of pokemon
     */
-    setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50);
-    setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl);
+    dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50));
+    dispatch(setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl));
   }
 
   // findThisPokemon uses a string value to append to the end of the pokemon api url to retrieve info on an individual pokemon
@@ -268,7 +237,7 @@ const PokeDexMainPage = () => {
           // Parse the response as json
           const json = await response.json();
   
-          setCurrentPokemonObj(json);
+          dispatch(setCurrentPokemonObj(json));
         } catch (error) {
           // Display a div as an alert that the requested pokemon can not be pulled
           console.log("error pulling data for one pokemon", error);
@@ -369,10 +338,10 @@ const PokeDexMainPage = () => {
 
         // If the component is still mounted, update the state variables
         if (!ignore) {
-          setNextSetOfPokemonUrl(json.next);
-          setPrevSetOfPokemonUrl(json.previous);
-          setPokemonData(json.results);
-          setIsLoading(false);
+          dispatch(setNextSetOfPokemonUrl(json.next));
+          dispatch(setPrevSetOfPokemonUrl(json.previous));
+          dispatch(setPokemonData(json.results));
+          dispatch(setIsLoading(false));
         }
       } catch (error) {
         // Log an error message if there's an issue fetching data. This will get changed to remove use of console.log()
@@ -405,7 +374,7 @@ const PokeDexMainPage = () => {
     return () => {
       ignore = true;
     }
-  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj]);
+  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj, dispatch]);
 
   return (
     <div ref={selectedPokemonRef} style={componentRoot}>
