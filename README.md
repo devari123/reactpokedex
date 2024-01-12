@@ -1,3 +1,22 @@
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#incomplete-tasks">Tasks I Did Not Complete</a></li>
+    <li><a href="#known-bugs">Knwonw Bugs In Application</a></li>
+    <li><a href="#changes-for-concurrent-env">Changes I Would Make If App Was Running In Concurrent Environment</a></li>
+    <li><a href="#coding-decisions-and-reasoning">Coding Decisions Made Throughout The Application</a></li>
+  </ol>
+</details>
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -29,50 +48,6 @@ Setting the app up for use requires two steps
    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#incomplete-tasks">Tasks I Did Not Complete</a></li>
-    <li><a href="#changes-for-concurrent-env">Changes I Would Make If App Was Running In Concurrent Environment</a></li>
-    <li><a href="#coding-decisions-and-reasoning">Coding Decisions Made Throughout The Application</a></li>
-  </ol>
-</details>
 
 
 
@@ -88,6 +63,8 @@ Once the app is available and running on your local machine, you will be able to
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+
+
 <!-- INCOMPLETE TASKS -->
 ## incomplete-tasks
 
@@ -101,12 +78,29 @@ Allthough the application fulfills every business and technical requirement, and
 
 
 
+
+<!-- KNOWN BUGS -->
+## known-bugs
+
+Here are the bugs that I've noticed in the application and how I would fix them if I had more time:
+* When a user clicks the back or next buttons rapidly over and over, the displaying of the pokemon can become skewed. To fix this, and cause less calls to be made to the API, I would retrieve info for all the pokemon instead of just 50 pokemon. I would still limit the number of pokemon displayed per page and include pagination, however, having all the pokemon already will allow a reference to the entire dataset of pokemon, including their index, so that every piece of information displayed is always correct regardless of how a user decides to navigate through the pokemon.
+* When a user clicks the view pokemon button, the application takes them to the top of the page to see the pokemon's information, however, when a user clicks the image for the pokemon, the user isn't taken to the top of the page. To fix, I would make sure the logic for the onClick function of each image is the exact same as the logic for the onClick function of the view pokemon button
+* There is one or two background colors that make it harder to see the white text of the application. I would change these ofr the benefit of the user.
+* I would let the user know that if their search contained a mix of letters and numbers, something the app automatically detects as an invalid pokemon identifier, that particular search value will not be saved to their search history log. To do this, I would simply add that message to the error message that already pops up when a user enters a phrase that includes a mix of numbers and letters.
+* Sometimes when a pokemon is selected or searched for and that pokemon's image shows up, if a user is still at the top of the page, it's possible that if they attempt to click an image to show a new pokemon, it will not work because the iamge of the selected pokemon is blocking the top of some of the clickable images below. To fix this, I would simply change the z-index of the clickable images so that it would be clickable at all times when user is still at the top of the page and an individual pokemon image is being displayed.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+
 <!-- CHANGES I WOULD MAKE FOR APP IN CONCURRENT ENV -->
 ## changes-for-concurrent-env
 
 Aside from the modifications I mentioned I would make in the previous "Incomplete Tasks" section, one thing I would do differently is look at the pros and cons of using localStorage to store all past searches made by a user. If the intention was to have that feature available for each user and it was deemed as necessary, I would look into using cookies as this would be a more effective way to store data as it can't be as easily manipulated, and it would actually show up for each user regardless of what device they were using or not using.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 
 
