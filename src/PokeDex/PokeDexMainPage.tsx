@@ -49,6 +49,7 @@ const PokeDexMainPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<string>("stats");
+  const [typeOfPaginationClicked, setTypeOfPaginationClicked] = useState<string>('none');
 
   // Styling definitions
   const componentRoot: CSSProperties = {
@@ -244,7 +245,7 @@ const PokeDexMainPage = () => {
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects, instead of just in relation to
       the current set of pokemon
     */
-    dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50));
+    setTypeOfPaginationClicked('forward');
     dispatch(setCurrentSetOfPokemonUrl(nextSetOfPokemonUrl));
   }
 
@@ -255,7 +256,7 @@ const PokeDexMainPage = () => {
       This helps keep track of what the index of a pokemon object is in relation to all 1302 pokemon objects instead of just in relation to
        the current set of pokemon
     */
-    dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50));
+    setTypeOfPaginationClicked('back');
     dispatch(setCurrentSetOfPokemonUrl(prevSetOfPokemonUrl));
   }
 
@@ -387,15 +388,9 @@ const PokeDexMainPage = () => {
 
   useEffect(() => {
     let ignore = false;
-    let isFetching = false;
 
     // this is a function to fetch the list of pokemon from the pokemon api
     const fetchPokemon = async () => {
-      if (isFetching) {
-        return; // If a fetch is already in progress, exit early
-      }
-    
-      isFetching = true; // Set the flag to true to indicate that a fetch is in progress
 
       try {
         // Fetch data from the current URL
@@ -410,13 +405,17 @@ const PokeDexMainPage = () => {
           dispatch(setPrevSetOfPokemonUrl(json.previous));
           dispatch(setPokemonData(json.results));
           dispatch(setIsLoading(false));
+          if (typeOfPaginationClicked === 'forward') {
+            dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet + 50));
+          }
+          if (typeOfPaginationClicked === 'back') {
+            dispatch(setIndexOfFirstPokemonInSet(indexOfFirstPokemonInSet - 50));
+          }
         }
       } catch (error) {
         setErrorMessage("We were unable to fetch the data at this time");
         setError(true);
         setTimeout(() => { setError(false); }, 3000);
-      } finally {
-        isFetching = false; // Resets the flag regardless of success or failure
       }
     };
 
@@ -445,7 +444,7 @@ const PokeDexMainPage = () => {
     return () => {
       ignore = true;
     }
-  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj, dispatch]);
+  }, [currentSetOfPokemonUrl, searchHistory, nextSetOfPokemonUrl, prevSetOfPokemonUrl, pokemonData, currentPokemonObj, dispatch, typeOfPaginationClicked, indexOfFirstPokemonInSet]);
 
   return (
     <div ref={selectedPokemonRef} style={componentRoot}>
