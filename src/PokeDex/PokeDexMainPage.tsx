@@ -347,7 +347,11 @@ const PokeDexMainPage = () => {
             <img
               src={`${baseImgURL}${pokemonIndex}.png`}
               alt="imageofpokemon"
-              onClick={() => findThisPokemon(String(pokemonIndex), false)}
+              onClick={() => {
+                findThisPokemon(String(pokemonIndex), false);
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+              }}
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 
                 // Handle image loading errors and replace it with a default image
