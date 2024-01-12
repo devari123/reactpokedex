@@ -17,7 +17,7 @@ Setting the app up for use requires two steps
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/devari123/Project-Name.git
+   git clone https://github.com/devari123/reactpokedex.git
    ```
 2. Install the necessary NPM packages
    ```sh
@@ -52,7 +52,6 @@ Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
@@ -84,7 +83,7 @@ Once the app is available and running on your local machine, you will be able to
 
 * View The Sprites, Stats, Names and Id Of Every Pokemon In The PokeDex
 * Search For Any Pokemon in the PokeDex Using Their Name Or Their Number
-* View Your Past Searches and Click On Any One Of Those Previous Entries To Search Using That Phrase Again.
+* View Your Past Searches and Click On Any One Of Those Previous Entries To Search Using That Phrase Again. The only searches that will not be saved to the search history log are searches that the application automatically detects as not being a valid pokemon, aka, a search phrase with a mix of letters and numbers.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
