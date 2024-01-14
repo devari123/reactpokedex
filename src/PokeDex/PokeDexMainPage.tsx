@@ -425,7 +425,7 @@ const PokeDexMainPage = () => {
     }
 
     const localStorageSearchHistory = localStorage.getItem('searchHistory');
-    if (localStorageSearchHistory && localStorageSearchHistory.length && searchHistory && localStorageSearchHistory.length !== searchHistory.length) {
+    if (searchHistory.length !== 0 && (!localStorageSearchHistory || (localStorageSearchHistory.length !== searchHistory.length))) {
       // Save search history to localStorage
       localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
@@ -466,12 +466,6 @@ const PokeDexMainPage = () => {
                 <h1 style={statsHeading} onClick={() => setCurrentCategory("stats")}>
                   STATS
                 </h1>
-                {/* <h1 style={statsHeading} onClick={() => setCurrentCategory("moves")}>
-                  MOVES
-                </h1> */}
-                {/* <h1 style={statsHeading} onClick={() => setCurrentCategory("abilities")}>
-                  ABILITIES
-                </h1> */}
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {(currentCategory === "types") && (
                     <div style={typesContainer}>
@@ -532,15 +526,6 @@ const PokeDexMainPage = () => {
                   )}
                 </div>
               </div>
-              {/* <img src={`${process.env.PUBLIC_URL}/icons8-ocean-64.png`} alt="water"  style={{ zIndex: 1000 }} /> */}
-              {/* <p style={screenText}>
-                {currentPokemonObj.abilities.map((ability) => {
-                    return (
-                      {ability.ability.name}
-                    )
-                  })
-                }
-              </p> */}
             </div>
           )}
           <PokeDexSearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} findThisPokemon={findThisPokemon}/>
