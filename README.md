@@ -58,7 +58,7 @@ Once the app is available and running on your local machine, you will be able to
 
 * View The Sprites, Stats, Names and Id Of Every Pokemon In The PokeDex
 * Search For Any Pokemon in the PokeDex Using Their Name Or Their Number
-* View Your Past Searches and Click On Any One Of Those Previous Entries To Search Using That Phrase Again. The only searches that will not be saved to the search history log are searches that the application automatically detects as not being a valid pokemon, aka, a search phrase with a mix of letters and numbers.
+* View Your Past Searches and Click On Any One Of Those Previous Entries To Search Using That Phrase Again. The only searches that will not be saved to the search history log are searches that the application automatically detects as not being a valid pokemon, aka, a search phrase with a mix of letters and numbers or a number that is longer than 4 digits long.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -72,7 +72,7 @@ Allthough the application fulfills every business and technical requirement, and
 * Making sure every part of the UI/UX is responsive and fits all screen sizes. I didn't do any intensive work to make sure the application was responsive since it wasn't listed as a requirement
 * Breaking sections of code out into reusable components where it makes sense. I did create multiple reusable components to help improve code readability, however, I would and could have created more reusable components if I had the time to do so, especially in a real world project since I know reusable components can potentially make it easier to read the code, build on top of the code, and expand upon the application overall in the long and short term.
 * I would have also done a lot more with the data gathered from the API and made the app look nicer than it does currently, even though it doesn't look too bad as is.
-* Address the somewhat small bugs I've noticed within the application
+* Address the bugs I've noticed within the application
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -83,11 +83,13 @@ Allthough the application fulfills every business and technical requirement, and
 ## known-bugs
 
 Here are the bugs that I've noticed in the application and how I would fix them if I had more time:
-* When a user clicks the back or next buttons rapidly over and over, the displaying of the pokemon can become skewed. To fix this, and cause less calls to be made to the API, I would retrieve info for all the pokemon instead of just 50 pokemon. I would still limit the number of pokemon displayed per page and include pagination, however, having all the pokemon already will allow a reference to the entire dataset of pokemon, including their index, so that every piece of information displayed is always correct regardless of how a user decides to navigate through the pokemon.
+* When a user clicks the back or next buttons rapidly over and over, the displaying of the pokemon can become skewed. To fix this, I came up with and implemented a solution in the last commit made in the src directory, which involved me moving the dispatch(setFirstIndex......) function inside of the async function inside of useEffect, and creating an additional state value to tell the application which of the next or back buttons were pressed. Another solution, that would also cause less calls to be made to the API, would include retrieving info for all the pokemon on initial page load, instead of just 50 pokemon. I would still limit the number of pokemon displayed per page and include pagination, however, having all the pokemon already will allow a reference to the entire dataset of pokemon, including their index, so that every piece of information displayed is always correct regardless of how a user decides to navigate through the pokemon.
 * When a user clicks the view pokemon button, the application takes them to the top of the page to see the pokemon's information, however, when a user clicks the image for the pokemon, the user isn't taken to the top of the page. To fix, I would make sure the logic for the onClick function of each image is the exact same as the logic for the onClick function of the view pokemon button
 * There is one or two background colors that make it harder to see the white text of the application. I would change these ofr the benefit of the user.
 * I would let the user know that if their search contained a mix of letters and numbers, something the app automatically detects as an invalid pokemon identifier, that particular search value will not be saved to their search history log. To do this, I would simply add that message to the error message that already pops up when a user enters a phrase that includes a mix of numbers and letters.
 * Sometimes when a pokemon is selected or searched for and that pokemon's image shows up, if a user is still at the top of the page, it's possible that if they attempt to click an image to show a new pokemon, it will not work because the iamge of the selected pokemon is blocking the top of some of the clickable images below. To fix this, I would simply change the z-index of the clickable images so that it would be clickable at all times when user is still at the top of the page and an individual pokemon image is being displayed.
+* There needs to be a max-height style applied to the search history log to allow the entire search history to be viewed instead of being cut off by the screen if it is a long list
+* When there is no search history log, the user clicking view search history causes the phrase to change to close search history, even though no search history appears since there's nothing to show. Disabling the view search history button when there is no search history is the solution for this.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
