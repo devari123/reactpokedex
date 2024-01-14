@@ -26,7 +26,7 @@ const PokeDexSearchHistory: React.FC<PokeDexSearchHistoryProps> = ({ searchHisto
     zIndex: 30,
     minWidth: '10%',
     marginTop: '1%',
-    maxHeight: '',
+    maxHeight: '20vh',
   } as React.CSSProperties;
 
   const yourRecentSearchesText: CSSProperties = {
